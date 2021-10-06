@@ -8,23 +8,29 @@ const id = urlSearchParams.get("id")
 console.log(id)
 
 
-// async function call() {
+async function call() {
 
-//     let response = await fetch("http://localhost:3000/api/teddies/" + id)
+    let response = await fetch("http://localhost:3000/api/teddies/" + id)
     
-//       if (response.ok) {
-//       return response.json()    
-//       }   
+      if (response.ok) {
+      return response.json()    
+      }   
   
-//       else {
-//         throw "Ce produit n'existe pas"
-//       }
+      else {
+        //   if(response.code == 404){
+        //       //Message d'erreur
+            
+        //   }
+        //   esle {
+            throw "Ce produit n'existe pas"
+          }
+
+        
   
-// }
+}
 
 async function run() {
-    let get = await fetch("http://localhost:3000/api/teddies/" + id)
-    let product = await get.json()
+    let product = await call()
     console.log(product)
 
     let bearImg = document.getElementById("bearImg")
@@ -36,20 +42,33 @@ async function run() {
     let bearDescription = document.getElementById("bearDescription")
     bearDescription.innerText = `${product.description}`
 
-    for (let i=0; i<10; i++){
-        let qtyList = document.createElement("option")
-        qtyList.setAttribute("value", i+1)
+    let bearColor = document.getElementById("bearColor") 
+    for (let color of product.colors){
+        let colorList = document.createElement("option")
+        colorList.setAttribute("value", color)
+        colorList.innerText= color
 
-        let bearQty = document.getElementById("bearQty")
-        bearQty.appendChild(qtyList)
+        bearColor.appendChild(colorList)
     }
 
+    let bearQty = document.getElementById("bearQty")  
+    console.log(bearQty)
+    for (let i=1; i<=10; i++){
+        
+        let qtyList = document.createElement("option")
+        qtyList.setAttribute("value", i)
+        qtyList.innerText= i
+
+        bearQty.appendChild(qtyList)
+
+    }
+    
     let bearPrice = document.getElementById("bearPrice")
     bearPrice.innerText = `${product.price}`/ 100 + " €"
 
     let bearCommand = document.getElementById("bearCommand")
     bearCommand.addEventListener('click', function(){
-        console.log(product._id)
+        console.log(product._id + colorList + qtyList)
     })
 
 
