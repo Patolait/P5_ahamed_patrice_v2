@@ -10,25 +10,34 @@ console.log(id)
 
 async function call() {
 
-    let response = await fetch("http://localhost:3000/api/teddies/" + id)
-    
-      if (response.ok) {
-      return response.json()    
-      }   
+  let response = await fetch("http://localhost:3000/api/teddies/" + id)
+  console.log(response)
   
-      else {
-          if(response.code == 404){
-            let noExist = document.getElementById("noExist")
-            noExist.classList.remove("d-none")
-   
-          }
-          else {
-            throw "Ce produit n'existe pas"
-          }
-        }
+  if (response.ok) {
+    return response.json()
+  }   
 
-        
-  
+  else if (response.status == 404) {
+    //Affichage message d'erreur
+    let noExist = document.getElementById("noExist")
+    noExist.classList.remove("d-none");
+
+    //Suppression affichage standard
+    let bRetour = document.getElementById("bRetour")
+    let bProduct = document.getElementById("bProduct")
+    bRetour.classList.add("d-none")
+    bProduct.classList.add("d-none")
+
+  } 
+
+  else if (response.status == 500) {
+    let alertMessage = document.getElementById("alertMessage")
+    alertMessage.innerText = "La reqête n'a pu aboutir"
+  } 
+
+  else {
+    throw "Ce produit n'existe pas"
+  }
 }
 
 async function run() {
@@ -114,59 +123,54 @@ async function run() {
     // let firstProduct = new elementList (product._id, bearQty.value, bearColor.value, bearPrice.value);
     // console.log(elementList)
 
-    let bearArticle = {
-      modele: product._id,
-      quantite: bearQty.value,
-      couleur: bearColor.value,
-    };
+    // let bearArticle = {
+    //   modele: product._id,
+    //   quantite: bearQty.value,
+    //   couleur: bearColor.value,
+    // };
 
-    let resumeArticle = [bearArticle];
-    console.log(resumeArticle)
-      // console.log(product._id)
-      // console.log(bearQty.value)
-      // document.getElementById("bearColor");
-      // if(bearColor.value === ""){
-      //   alert('Veuillez séléctionner une couleur');
-      // }
-      // else{
-      //   console.log(bearColor.value)
-      // }
+    // let articleTab = [bearArticle];
+    // console.log(articleTab)
+
+    const resumeArticle = 'bearStore'
+
+    let resume = localStorage.getItem(resumeArticle) === null
+    ? []
+    : JSON.parse (localStorage.getItem(resumeArticle))
+
+    //Creation de l'objet pour integration
+    let bArticle ={
+      id:id,
+      color:$('#bearColor').val(),
+      quantity:$('#bearQty').val()
+    }
+
+    //Creation de la boucle d'ajout
+    let alreadyExist = false
+    for (let bear of resume){
+      if (bear.id === bArticle.id && bear.color === bArticle.color){
+        bear.quantity = Number(bear.quantity) + Number(bArticle.quantity)
+        alreadyExist = true
+        break
+      }
+    }
+
+    if (!alreadyExist){
+      resume.push(bArticle)
+    }
+
+    localStorage.setItem (resumeArticle, JSON.stringify(resume))
+
+    localStorage.getItem('resumeArticle')
+
+
+
+
   });
 
-  // let addToCart = function() {
-  //   let productId = getProductId( this )
-  //   if( productId > 0 ) {
-  //     updateQuantity( productId )
-  //     updateCartLabel()
-  //   }
-  // }
-  // let cart = JSON.parse(localStorage.getItem("resumeArticleList"))
-
-  // if (cart) {
-  //   let articleInCart = false
-
-  //   for (let i = 0; i< cart.lenght; i++) {
-  //     if (cart[i].modele == resumeArticle.modele && cart[i].couleur == resumeArticle.couleur){
-  //       cart[i].quantite = cart[i].quantite + 1
-  //       articleInCart = true
-  //     }
-  //   }
-
-  //   if (!articleInCart){
-  //     cart.push(articleInCart)
-  //   }
-
-  //   localStorage.setItem("resumeArticleList", JSON.stringify(cart))
-  // }
-
-  // else{
-  //   cart = []
-  //   cart.push(resumeArticle)
-  //   localStorage.setItem ("resumeArticleList", JSON.stringify(cart))
-  // }
-    
-
-
+  //Local Storage
+  //Creation du locale storage
+  
 
     
 
