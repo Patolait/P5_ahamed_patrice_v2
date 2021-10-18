@@ -31,8 +31,15 @@ async function call() {
   } 
 
   else if (response.status == 500) {
-    let alertMessage = document.getElementById("alertMessage")
-    alertMessage.innerText = "La reqête n'a pu aboutir"
+    //Affichage message d'erreur
+    let noExist = document.getElementById("errorMessage")
+    noExist.classList.remove("d-none");
+
+    //Suppression affichage standard
+    let bRetour = document.getElementById("bRetour")
+    let bProduct = document.getElementById("bProduct")
+    bRetour.classList.add("d-none")
+    bProduct.classList.add("d-none")
   } 
 
   else {
@@ -62,30 +69,6 @@ async function run() {
     bearColor.appendChild(colorList)
   }
 
-  // let selectColor = document.getElementById("bearColor");
-  // selectColor.addEventListener('change', (eventColor) => {
-  //   document.getElementById("bearCommand")
-  //   bearCommand.addEventListener('click', function(e){
-  //     if(!eventColor.target.value){
-  //       alert('Veuillez séléctionner une couleur');
-  //     }
-  //     else{
-  //       console.log(eventColor.target.value)
-  //     }
-
-  //   })
-    // resultColor.onclick = console.log(eventColor.target.value) 
-  // });
-
-  // function changeEventHandler(event){
-  //   if(!event.taget.value) {
-  //     alert('Veuillez secletionner une couleur')
-  //   }
-  //   else{
-  //     console.log(event.target.value)
-  //   }
-  // }
-
 
   let bearQty = document.getElementById("bearQty")  
   console.log(bearQty)
@@ -98,39 +81,13 @@ async function run() {
       bearQty.appendChild(qtyList)
 
   }
-
-  // let selectQty = document.getElementById("bearQty");
-  // selectQty.addEventListener('change', (eventQty) => {
-  //   document.getElementById("bearCommand")
-  //   bearCommand.addEventListener('click', function(eventQty){
-  //       console.log(eventQty.target.value)
-  //     })
-  // });
   
   let bearPrice = document.getElementById("bearPrice")
   bearPrice.innerText = `${product.price}`/ 100 + " €"
 
   let bearCommand = document.getElementById("bearCommand")
   bearCommand.addEventListener('click', function(e){
-    // class elementList{
-    //   constructor(idProduct, qtyProduct, colorProduct, priceProduct){
-    //     this.idProduct = idProduct;
-    //     this.qtyProduct = qtyProduct;
-    //     this.colorProduct = colorProduct;
-    //     this.priceProduct = priceProduct;
-    //   }
-    // }
-    // let firstProduct = new elementList (product._id, bearQty.value, bearColor.value, bearPrice.value);
-    // console.log(elementList)
 
-    // let bearArticle = {
-    //   modele: product._id,
-    //   quantite: bearQty.value,
-    //   couleur: bearColor.value,
-    // };
-
-    // let articleTab = [bearArticle];
-    // console.log(articleTab)
 
     const resumeArticle = 'bearStore'
 
@@ -160,18 +117,9 @@ async function run() {
     }
 
     localStorage.setItem (resumeArticle, JSON.stringify(resume))
-
     localStorage.getItem('resumeArticle')
 
-
-
-
   });
-
-  //Local Storage
-  //Creation du locale storage
-  
-
     
 
 }

@@ -36,6 +36,7 @@
   </header>
 
   <!--Alert produit inexistant-->
+  <!--Erreur 404-->
   <div id="noExist" class="container d-none">
     <div class="row">
       <div class=" col-12 alert alert-danger text-center mt-3" role="alert" id="alertMessage">
@@ -43,6 +44,19 @@
       </div>
       <div class=" col-12 text-center mt-3">
         <img class="text-center col-10" src="images/no_exist.jpg" alt="ce produit n'existe pas" >
+      </div>
+      <div class=" col-12 text-center mt-1 mb-5">
+        <span class="text-left"><a href="index.html">Revenir à l'accueil</a></span>
+      </div>
+    </div>
+  </div>
+  <div id="errorServer" class="container d-none">
+    <div class="row">
+      <div class=" col-12 alert alert-danger text-center mt-3" role="alert" id="errorMessage">
+        DESOLE ! LA REQUETE N'A PU ABOUTIR
+      </div>
+      <div class=" col-12 text-center mt-3">
+        <img class="text-center col-10" src="images/error_500.jpg" alt="La requete n a pu aboutir" >
       </div>
       <div class=" col-12 text-center mt-1 mb-5">
         <span class="text-left"><a href="index.html">Revenir à l'accueil</a></span>
