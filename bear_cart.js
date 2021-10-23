@@ -1,5 +1,9 @@
 let bearCart = JSON.parse(localStorage.getItem('bearStore'));
 
+for (let i of bearStore){
+  
+}
+
 async function call() {
 
   let response = await fetch("http://localhost:3000/api/teddies/")
@@ -113,12 +117,18 @@ let getBear = async () =>{
   bearPriceLine.appendChild (bearColTotal)
   bearColTotal.appendChild (bearCartTotal)
 
+
+
   for (let bear of bearCart) {
 
+
+  
 
     bearCartTitle.innerText=`${bear.id}`
     bearCartColor.innerText=`${bear.color}`
     bearCartQty.innerText=`${bear.quantity}`
+
+    
 
 
   
