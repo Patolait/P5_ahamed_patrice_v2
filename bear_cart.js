@@ -1,6 +1,6 @@
 //Recuperation des donnée du local storage
 let bearCart = JSON.parse(localStorage.getItem('bearStore'));
-
+console.log(bearCart)
 //Recuperation données APi dédiées aux produits du localStorage
 let get = async (id) => {
   let response = await fetch(`http://localhost:3000/api/teddies/${id}`)
@@ -32,7 +32,15 @@ let getBear = async () =>{
     bearReturn.classList.add("d-none");
   }
 
+  let bearTable = document.getElementById("bearResume")
+  bearTable.innerText = ''
+
+  //Boucle d'ajout des produits
   for (let bear of bearCart){
+
+    let bearLine = document.createElement('tr')
+    bearTable.appendChild (bearLine)
+
     //Recuperation des données de l'API pour chaque produit
     if(products[bear.id] === undefined){
       let res = await fetch (`http://localhost:3000/api/teddies/${bear.id}`)
@@ -41,9 +49,8 @@ let getBear = async () =>{
     } 
     console.log(products)
 
-    let bearTable = document.getElementById("bearResume")
-    bearTable.innerText = ''
-  
+    
+    
 
   
     //Recuperation des informations à afficher
@@ -61,8 +68,7 @@ let getBear = async () =>{
     console.log (bearInformation)
 
 
-    let bearLine = document.createElement('tr')
-    bearTable.appendChild (bearLine)
+
 
     //Image
     let bearColImg = document.createElement('td')
@@ -127,6 +133,8 @@ let getBear = async () =>{
     bearColPrice.appendChild (bearCartPrice)
     bearCartPrice.innerText=`${bPrice} €`
 
+    let bearTotalPrice = 0
+
     //Total ligne
     let bearColTotalLine = document.createElement('td')
     bearColTotalLine.className = "w-25 h-25"
@@ -167,16 +175,22 @@ let getBear = async () =>{
     bearColTotalAll.appendChild (bearCartTotalAll)
 
     //TotalPrice
-    let bearTotalPrice = 0
+    
     let bearColTotalPrice = document.createElement('td')
     bearColTotalPrice.setAttribute("colspan","2")
     let bearCartTotalPrice = document.createElement('h2')
     bearCartTotalPrice.className = "text-center text-lg-right font-weight-bold text-danger"
     bearPriceLine.appendChild (bearColTotalPrice)
     bearColTotalPrice.appendChild (bearCartTotalPrice)
-    bearCartTotalPrice.innerText=`${bearTotalPrice + bPrice * bear.quantity} €`
+    bearCartTotalPrice.innerText=`${bearTotalPrice + bPrice*bear.quantity} €`
+
+    
+
+    
 
   }
+
+
 
   
 
