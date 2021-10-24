@@ -17,7 +17,6 @@ async function call() {
       return response.json()
     }   
 
-
     //Test en cas de id non identifié
     else if (response.status == 404) {
       //Affichage message d'erreur
@@ -91,8 +90,8 @@ async function run() {
   let bearCommand = document.getElementById("bearCommand")
   bearCommand.addEventListener('click', function(e){
 
+    //Creation du local storage
     const resumeArticle = 'bearStore'
-
     let resume = localStorage.getItem(resumeArticle) === null
     ? []
     : JSON.parse (localStorage.getItem(resumeArticle))
@@ -104,7 +103,7 @@ async function run() {
       quantity:$('#bearQty').val()
     }
 
-    //Creation de la boucle d'ajout
+    //Creation de la boucle d'ajout de quantité
     let alreadyExist = false
     for (let bear of resume){
       if (bear.id === bArticle.id && bear.color === bArticle.color){

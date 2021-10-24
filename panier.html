@@ -37,10 +37,10 @@
   </header>
 
   <!--retour-->
-  <div class="container">
-      <div class="row">
-          <span class="text-left"><a href="index.html">Continuer vos achats</a></span>
-      </div>
+  <div class="container" id="bearReturn">
+    <div class="row">
+      <span class="text-left"><a href="index.html">Continuer vos achats</a></span>
+    </div>
   </div>
 
   <!--Titre panier-->
@@ -51,21 +51,34 @@
       </div>
     </div>
 
+    <!--Alerte panier vide-->
+    <div class="container d-none" id="emptyBear">
+      <div class="row">
+        <div class="alert alert-danger text-center col" role="alert">
+          VOTRE PANIER EST VIDE
+        </div>
+      </div> 
+      <div class=" text-center col mb-5" role="alert">
+        <span class="text-left"><a href="index.html">Continuer vos achat</a></span>
+      </div> 
+    </div>
+
     <!--Produit-->
-    <table class="table">
+    <table class="table" id="bearTable">
       <!--Titre-->
       <thead class="thead-dark">
         <tr>
           <th scope="col" class="text-center">Image</th>
+          <th scope="col">Référence</th>
           <th scope="col">Modèle</th>
-          <th scope="col">Description</th>
           <th scope="col">Color</th>
-          <th scope="col" class="text-center">Quantité</th>
-          <th scope="col" class="text-right">Prix</th>
+          <th scope="col" class="text-center">Qté</th>
+          <th scope="col" class="text-right">Prix/Unit</th>
+          <th scope="col" class="text-right">Total</th>
           <th scope="col"></th>
         </tr>
       </thead>
-      
+
       <!--Element-->
       <tbody id="bearResume">
         <tr>
@@ -74,7 +87,7 @@
           <td><p class="text-center text-lg-left">Texte produit</p></td>
           <td><p class="text-center text-lg-center">Blanc</p></td>
           <td><p class="text-center text-lg-center">1</p></td>
-          <td><h4 class="text-center text-lg-right font-weight-bold">10.90€</h4></td>
+          <td><h5 class="text-center text-lg-right font-weight-bold">10.90€</h5></td>
           <td class="text-right"><i class="fas fa-trash-alt"></i></td>
         </tr>
       </tbody>
@@ -82,7 +95,7 @@
       <!--Ligne total-->
       <tbody id="totalPrice">
         <tr>
-          <td colspan="4"><h3 class="text-center text-lg-right font-weight-bold">Total</h3></td>
+          <td colspan="5"><h3 class="text-center text-lg-right font-weight-bold">Total</h3></td>
           <td colspan="2"><h2 class="text-center text-lg-right font-weight-bold text-danger" >10.90€</h2></td>
         </tr>
       </tbody>
@@ -90,7 +103,7 @@
     </div>
 
     <!--Bouton confirmer-->
-    <div class="row">
+    <div class="row" id="bearConfirme">
         <div class="col-12" >
             <a class="btn btn-primary btn-lg btn-block mt-3 mb-5" href="confirmed.html" role="button">Confirmer</a>
         </div>
