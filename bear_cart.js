@@ -54,17 +54,17 @@ let getBear = async () =>{
   
     //Recuperation des informations à afficher
     let bPrice = products[bear.id].price / 100
-    let bearInformation = [
-      products[bear.id].imageUrl,
-      bear.id,
-      products[bear.id].name,
-      products[bear.id].description,
-      bear.color,
-      `${bPrice} €`,
-      bear.quantity,
-      `${bPrice * bear.quantity} €`
-    ]
-    console.log (bearInformation)
+    // let bearInformation = [
+    //   products[bear.id].imageUrl,
+    //   bear.id,
+    //   products[bear.id].name,
+    //   products[bear.id].description,
+    //   bear.color,
+    //   `${bPrice} €`,
+    //   bear.quantity,
+    //   `${bPrice * bear.quantity} €`
+    // ]
+    // console.log (bearInformation)
 
 
     //Image
@@ -142,7 +142,7 @@ let getBear = async () =>{
     bearColPrice.appendChild (bearCartPrice)
     bearCartPrice.innerText=`${bPrice} €`
 
-    let bearTotalPrice = 0
+    
 
     //Total ligne
     let bearColTotalLine = document.createElement('td')
@@ -152,7 +152,9 @@ let getBear = async () =>{
     bearLine.appendChild (bearColTotalLine)
     bearColTotalLine.appendChild (bearCartTotalLine)
     bearCartTotalLine.innerText=`${bPrice * bear.quantity} €`
+    let bearTotalPrice = 0
     let bearTotal = bPrice * bear.quantity + bearTotalPrice
+    console.log(bearTotal)
 
     //Delete
     let bearColDelete = document.createElement('td')
@@ -168,6 +170,9 @@ let getBear = async () =>{
       bearTable.removeChild(bearLine);
       localStorage.removeItem(bear.id);
     })
+
+    
+    bearTotalPrice = bearTotalPrice + bPrice * bear.quantity
 
     //Calcul Total
     let bearTotalTab = document.getElementById("totalPrice")
@@ -193,7 +198,7 @@ let getBear = async () =>{
     bearCartTotalPrice.className = "text-center text-lg-right font-weight-bold text-danger"
     bearPriceLine.appendChild (bearColTotalPrice)
     bearColTotalPrice.appendChild (bearCartTotalPrice)
-    bearCartTotalPrice.innerText=`${bearTotal} €`
+    bearCartTotalPrice.innerText=`${bearTotalPrice} €`
 
     
 
