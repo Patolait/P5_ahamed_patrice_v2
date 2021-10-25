@@ -1,6 +1,7 @@
 //Recuperation des donnée du local storage
 let bearCart = JSON.parse(localStorage.getItem('bearStore'));
 console.log(bearCart)
+
 //Recuperation données APi dédiées aux produits du localStorage
 let get = async (id) => {
   let response = await fetch(`http://localhost:3000/api/teddies/${id}`)
@@ -47,10 +48,8 @@ let getBear = async () =>{
       let product = await res.json()
       products[bear.id] = product
     } 
-    console.log(products)
+    console.log(products)    
 
-    
-    
 
   
     //Recuperation des informations à afficher
@@ -66,8 +65,6 @@ let getBear = async () =>{
       `${bPrice * bear.quantity} €`
     ]
     console.log (bearInformation)
-
-
 
 
     //Image
@@ -119,11 +116,23 @@ let getBear = async () =>{
     //Qty
     let bearColQty = document.createElement('td')
     bearColQty.className = "w-25 h-25"
-    let bearCartQty = document.createElement('p')
-    bearCartQty.className = "text-center text-lg-center"
+    let bearQtyList = document.createElement("select")
+    for (let i=`${bear.quantity}`; i<=10 ; i++){  
+      let bearCartQty = document.createElement('option')
+      bearCartQty.setAttribute("value", i)
+      bearCartQty.innerText= i
+      bearQtyList.appendChild(bearCartQty)
+    }
+    // let bearCartQty = document.createElement('option')
+    // bearCartQty.innerText= `${bear.quantity}`
     bearLine.appendChild (bearColQty)
-    bearColQty.appendChild (bearCartQty)
-    bearCartQty.innerText=`${bear.quantity}`
+    bearColQty.appendChild(bearQtyList)
+    
+    // let bearCartQty = document.createElement('p')
+    // bearCartQty.className = "text-center text-lg-center"
+    // bearLine.appendChild (bearColQty)
+    // bearColQty.appendChild (bearCartQty)
+    // bearCartQty.innerText=`${bear.quantity}`
 
     //Price
     let bearColPrice = document.createElement('td')
@@ -143,6 +152,7 @@ let getBear = async () =>{
     bearLine.appendChild (bearColTotalLine)
     bearColTotalLine.appendChild (bearCartTotalLine)
     bearCartTotalLine.innerText=`${bPrice * bear.quantity} €`
+    let bearTotal = bPrice * bear.quantity + bearTotalPrice
 
     //Delete
     let bearColDelete = document.createElement('td')
@@ -155,7 +165,8 @@ let getBear = async () =>{
     bearLink.appendChild (bearCartDelete)
     //Evennement suppression
     bearCartDelete.addEventListener('click', function(){
-      localStorage.removeItem('bearStore')
+      bearTable.removeChild(bearLine);
+      localStorage.removeItem(bear.id);
     })
 
     //Calcul Total
@@ -182,7 +193,7 @@ let getBear = async () =>{
     bearCartTotalPrice.className = "text-center text-lg-right font-weight-bold text-danger"
     bearPriceLine.appendChild (bearColTotalPrice)
     bearColTotalPrice.appendChild (bearCartTotalPrice)
-    bearCartTotalPrice.innerText=`${bearTotalPrice + bPrice*bear.quantity} €`
+    bearCartTotalPrice.innerText=`${bearTotal} €`
 
     
 
