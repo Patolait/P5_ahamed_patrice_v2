@@ -36,6 +36,8 @@ let getBear = async () =>{
   let bearTable = document.getElementById("bearResume")
   bearTable.innerText = ''
 
+  let bearTotalPrice = 0
+
   //Boucle d'ajout des produits
   for (let bear of bearCart){
 
@@ -117,11 +119,16 @@ let getBear = async () =>{
     let bearColQty = document.createElement('td')
     bearColQty.className = "w-25 h-25"
     let bearQtyList = document.createElement("select")
+    bearQtyList.name = "bear-qty"
     for (let i=`${bear.quantity}`; i<=10 ; i++){  
       let bearCartQty = document.createElement('option')
       bearCartQty.setAttribute("value", i)
       bearCartQty.innerText= i
       bearQtyList.appendChild(bearCartQty)
+      // let selectElement = document.querySelector('bear-qty')
+      // selectElement.addEventListener('onchange', (event) =>{
+      //   bearCartQty.innerText = `${event.target.value}`;
+      // })
     }
     // let bearCartQty = document.createElement('option')
     // bearCartQty.innerText= `${bear.quantity}`
@@ -141,6 +148,7 @@ let getBear = async () =>{
     bearLine.appendChild (bearColPrice)
     bearColPrice.appendChild (bearCartPrice)
     bearCartPrice.innerText=`${bPrice} €`
+ 
 
     
 
@@ -152,7 +160,8 @@ let getBear = async () =>{
     bearLine.appendChild (bearColTotalLine)
     bearColTotalLine.appendChild (bearCartTotalLine)
     bearCartTotalLine.innerText=`${bPrice * bear.quantity} €`
-    let bearTotalPrice = 0
+
+    
     let bearTotal = bPrice * bear.quantity + bearTotalPrice
     console.log(bearTotal)
 

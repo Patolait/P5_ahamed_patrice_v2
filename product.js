@@ -29,7 +29,7 @@ async function call() {
       bRetour.classList.add("d-none")
       bProduct.classList.add("d-none")
 
-  } 
+    } 
   } catch (error) {
     //Affichage message d'erreur
     let noExist = document.getElementById("errorServer")
