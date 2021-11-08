@@ -44,6 +44,19 @@ const callApi = async (bearWay) => {
   }
 }
 
+//Creation ligne
+const bearTabRow   = (cssClass) =>{
+  let row       =  document.createElement('tr')
+  row.className = cssClass
+  return row
+}
+
+const bearTabCol = (cssClass) =>{
+  let col       = document.createElement('td')
+  col.className = cssClass
+  return col
+}
+
 //Creation colonne
 const bearCol   = (cssClass) =>{
   let div       = document.createElement('div')
@@ -88,16 +101,39 @@ const bearPrice   = (priceLevel, cssClass, content) =>{
   let price       = document.createElement(`h${priceLevel}`)
   price.className = cssClass
   price.innerText = content / 100 + "€"
+  return price
+}
+
+// Recuperation element Id
+const getId = (id) =>{
+  let idElement = document.getElementById(`${id}`)
+  return idElement
+}
+
+const create = (element, cssClass, text) =>{
+  let creation = document.createElement(element)
+  creation.className = cssClass
+  creation.innerText = `${text}`
+  return creation
+}
+
+//Insertion éléments
+const innerElement = (idElement) =>{
+  let element = document.getElementById(idElement)
+  element.innerText = ''
+  return element
 }
 
 //Page produit
 
 //Notification 
-const notify = ( message, success ) => {
+const notify = ( id, message, success ) => {
+  let innerMessage = document.getElementById(id)
 	let div       = document.createElement( 'div' )
+  innerMessage.appendChild(div)
 	div.innerText = message
 	div.className = `alert alert-${success ? 'success' : 'danger'} notification`
-	document.getElementsByTagName( 'body' )[0].appendChild( div )
+	// document.getElementsByTagName( 'body' )[0].appendChild( div )
 
 	setTimeout( () => {
 		$( div ).fadeOut( 500 )
@@ -148,12 +184,47 @@ const generatePrice = (element,number) =>{
   price.innerText = number / 100 + "€"
 }
 
+//Total
+totalArticle = 0
+const generateTotal = () =>{
+  if (totalArticle = 0){
+    getId("cartQty").innerText = "(0)"
+  }
+  else{
+    getId("cartQty").innerText = `(${totalArticle})`
+  }
+  
+}
+
+//Generation liste
+const generateSelect = ( name, id, options, defaultValue = null, cssClass = '' ) => {
+	let select       = document.createElement( 'select' )
+	select.name      = name
+	select.id        = id
+	select.className = cssClass
+
+	for( let value in options ) {
+		let option       = document.createElement( 'option' )
+		option.value     = value
+		option.innerText = options[value]
+		select.appendChild( option )
+	}
+
+	if( defaultValue !== null ) {
+		select.value = defaultValue
+	}
+
+	return select
+}
+
+
 let runIndex   = async () =>{
   let products = await callApi('/')
   console.log(products)
+
+  generateTotal ()
   
-  let article = document.getElementById("bear")
-  article.innerText = ''
+  let article = innerElement('bear')
 
   for (let product of products) {
     let col = bearCol('col-12 col-lg-4')
@@ -177,47 +248,212 @@ let runIndex   = async () =>{
     let description = bearDescription('card-text text-center', `${product.description}`)
     cardBody.appendChild(description)
 
-    // let price = bearPrice(3, 'card-title text-center font-weight-bold text-danger', `${product.price}`)
-    // cardBody.appendChild(price)
+    let price = bearPrice(3, 'card-title text-center font-weight-bold text-danger', `${product.price}`)
+    cardBody.appendChild(price)
   }
-
 }
+
+let updateProduct = (file, productId, productColor, newQty, tab, storage) =>{
+  let alreadyExist = false
+  for (let product of file){
+    if (product.id === productId && product.color === productColor){
+      product.qty = product.qty + newQty
+      alreadyExist = true
+    }
+    if (! alreadyExist){
+      file.push(tab)
+    }
+    localStorage.setItem (storage, JSON.stringify(file))
+    localStorage.getItem (storage)
+  }
+  console.log (file)
+}
+
 
 let runProduct = async () =>{
   //Recherche de l'url
-const queryString_url = window.location.search
+  const queryString_url = window.location.search
 
-//Recuperation de l'id
-const urlSearchParams = new URLSearchParams(queryString_url)
-const id = urlSearchParams.get("id")
+  //Recuperation de l'id
+  const urlSearchParams = new URLSearchParams(queryString_url)
+  const id = urlSearchParams.get("id")
 
-// notify( 'Votre produit a bien été ajouté au panier', true )
+  // notify( 'Votre produit a bien été ajouté au panier', true )
 
-let product = await callApi(`/${id}`)
-console.log(product)
+  let product = await callApi(`/${id}`)
+  console.log(product)
 
-let imgProduct = imgIntegration('bearImg', product.imageUrl, `${product.name}`)
+  //Modif du DOM
+  imgIntegration('bearImg', product.imageUrl, `${product.name}`)
+  elementIntegration('bearTitle', `${product.name}`)
+  elementIntegration('bearDescription', `${product.description}`)
+  generateOption('bearColor', product.colors)
+  generateQty('bearQty', 10)
+  generatePrice('bearPrice', `${product.price}`)
+  getId("bearCommand").addEventListener('click', function(e){
+    //Message de validation 
+    alert("Le(s) produit(s) à été rajouté à votre panier")
 
-let titleProduct = elementIntegration('bearTitle', `${product.name}`)
 
-let descriptionProduct = elementIntegration('bearDescription', `${product.description}`)
+    //Creation du local storage
+    const resumeArticle = 'bearStore'
+    let resume = localStorage.getItem(resumeArticle) === null
+    ? []
+    : JSON.parse (localStorage.getItem(resumeArticle))
 
-let colorProduct = generateOption('bearColor', product.colors)
+    //Creation de l'objet pour integration
+    let bArticle ={
+      id:id,
+      color:$('#bearColor').val(),
+      quantity:$('#bearQty').val()
+    }
+  
 
-let quantityProduct = generateQty('bearQty', 10)
+    //Creation de la boucle d'ajout de quantité
+    // updateProduct (resume, 'bArticle.id', 'bArticle.color', Number(bArticle.quantity), bArticle, 'resumeArticle')
+    let alreadyExist = false
+    let total = 0
 
-let priceProduct = generatePrice('bearPrice', `${product.price}`)
+    updateProduct(resume, bArticle.id, bArticle.color, bArticle.quantity, bArticle, resumeArticle)
+//   for (let bear of resume){
+//     if (bear.id === bArticle.id && bear.color === bArticle.color){
+//       bear.quantity = Number(bear.quantity) + Number(bArticle.quantity)
+//       alreadyExist = true
+      
+//       break
+//     }
+//     total += Number(bear.quantity)
+//     totalArticle = total
+//     getId("cartQty").innerText = `(${totalArticle})` 
+//   }
+  
+
+//   if (!alreadyExist){
+//     resume.push(bArticle)
+//   }
+
+//   localStorage.setItem (resumeArticle, JSON.stringify(resume))
+//   localStorage.getItem('resumeArticle')
+
+  });
 
 }
-runProduct
 
-let bearProduct = async () =>{
+let runCart = async () =>{
+  
+  //Recuperation des donnée du local storage
+  let bearCart = JSON.parse(localStorage.getItem('bearStore'));
+  console.log(bearCart)
+
+  let get = async (id) => {
+  let product = await callApi(`/${id}`)
+  console.log(product)
+  }
+
+
+  let getBear = async () =>{
+
+    let cartTable = getId( 'bearRow' )
+    let hasFirstRow = false
+    for( let i = 0 ; i < cartTable.childNodes.length ; i++ ) {
+      let child = cartTable.childNodes[i]
+      if( ! hasFirstRow && child.tagName === 'tr' ) {
+        hasFirstRow = true
+      }
+      else {
+        child.remove()
+        i--
+      }
+    }
+
+    let products = {}
+    let bearTotalPrice = 0
+
+    //Alerte en cas de panier vide
+    if (bearCart === null){
+    //Affichage message d'alert
+    let emptyBear = getId("emptyBear")
+    emptyBear.classList.remove("d-none");
+
+    //Mise en cache des éléments du panier
+    let bearTable = getId("bearTable")
+    let bearConfirme = getId("bearConfirme")
+    let bearReturn = getId("bearReturn")
+    bearTable.classList.add("d-none");
+    bearConfirme.classList.add("d-none");
+    bearReturn.classList.add("d-none");
+    }
+
+    let bearTable = getId("bearResume")
+    bearTable.innerText = ''
+
+    
+
+    //Boucle ajout produit
+    for (let bear of bearCart){
+      
+
+      if(products[bear.id] ===undefined){
+        products[bear.id] = await callApi(`/${bear.id}`)
+      }
+      console.log(products)  
+
+      let product = products[bear.id]
+
+      let bPrice = products[bear.id].price/100
+
+      let cartLine = bearTabRow()
+      bearTable.appendChild (cartLine)
+
+
+      //Image panier
+      let colImg = bearTabCol ()
+      cartLine.appendChild(colImg)
+      let cartImg = bearImg('img-fluid mx-auto d-block', product.imageUrl, `${product.name}`)
+      colImg.appendChild (cartImg)
+
+      //Référence panier
+      let colRef = bearTabCol('w-25 h-25')
+      cartLine.appendChild(colRef)
+      let cartRef = bearDescription ('text-center text-lg-left small', `${bear.id}`)
+      colRef.appendChild(cartRef)
+
+      //Modele panier
+      let colTitle = bearTabCol('w-25 h-25')
+      cartLine.appendChild(colTitle)
+      let cartTitle = bearTitle(5, 'text-center text-lg-left', `${product.name}`)
+      colTitle.appendChild(cartTitle)
+
+      //Couleur element panier
+      let colColor = bearTabCol('w-25 h-25')
+      cartLine.appendChild(colColor)
+      let cartColor = bearDescription ('text-center text-lg-left', `${bear.color}`)
+      colColor.appendChild(cartColor)
+
+      //Quantité
+      let colQty = bearTabCol('w-25 h-25')
+      cartLine.appendChild(colQty)
+      let listQty = generateSelect('quantity', '', bearOptions, bear.qty)
+      listQty.addEventListener('change', () =>{
+
+      })
+
+
+
+
+
+      
+      
+
+      
+
+    }
+
+  }
+
+  getBear()
   
 
-  
-
-  let img = bearImg('card-img-top', product.imageUrl, `image ourson ${product.name}`)
-    link.appendChild(img)
 
 
 }
@@ -300,5 +536,3 @@ let bearProduct = async () =>{
 
 //   }
 // });
-
-
