@@ -110,6 +110,65 @@
     </div>
   </section>
 
+  <!--Formulaire-->
+  <section id="formulaire" class="container d-none">
+    <form>
+      <div class="row" mt-5>
+        <div class="col">
+          <h3 class="text-center mb-3"><u>VEUILLEZ REMPLIR LE FORMULAIRE</u></h3>
+        </div>
+      </div>
+      <!--Nom prenom-->
+      <div class="row mb-2">
+        <div class="col">
+          <label for="firstName">Prenom</label>
+          <input type="text" class="form-control" placeholder="Prenom" id="firstName" required="required">
+        </div>
+        <div class="col">
+          <label for="lastName">Nom</label>
+          <input type="text" class="form-control" placeholder="Nom" id="lastName" required="required">
+        </div>
+      </div>
+
+      <!--Adresse-->
+      <div class="row mb-2">
+        <div class="col">
+          <label for="adress">Adresse</label>
+          <input type="text" class="form-control" placeholder="Adresse" id="adress" required="required">
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-4">
+          <label for="cp">Code Postale</label>
+          <input type="text" class="form-control" minlength="5" placeholder="Code postale" id="cp" required="required">
+        </div>
+        <div class="col">
+          <label for="town">Ville</label>
+          <input type="text" class="form-control" placeholder="Ville" id="town" required="required">
+        </div>
+      </div>
+
+      <!--Tél + mail-->
+      <div class="row mb-2">
+        <div class="col-4">
+          <label for="tel">Téléphone</label>
+          <input type="tel" class="form-control" minlength="10" placeholder="N° de téléphone" id="tel">
+        </div>
+        <div class="col">
+          <label for="mail">email</label>
+          <input type="email" class="form-control" placeholder="adresse@mail.com" id="mail">
+        </div>
+      </div>
+
+      <!--Bouton valider-->
+      <div class="row" mt-5>
+        <div class="col">
+          <input type="submit" class="btn btn-danger btn-lg btn-block mt-3 mb-5" href="confirmed.html" role="button" id="validOrder"></input>
+        </div>
+      </div>
+    </form>
+  </section>
+
     <!--Footer-->
   <footer  class="bg-light">
     <div class="container">

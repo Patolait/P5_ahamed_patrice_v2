@@ -44,6 +44,9 @@ const callApi = async (bearWay) => {
   }
 }
 
+let bearCart = JSON.parse(localStorage.getItem('bearStore'));
+console.log(bearCart)
+
 //Creation ligne
 const bearTabRow   = (cssClass) =>{
   let row       =  document.createElement('tr')
@@ -51,9 +54,10 @@ const bearTabRow   = (cssClass) =>{
   return row
 }
 
-const bearTabCol = (cssClass) =>{
+const bearTabCol = (cssClass, attribut, value) =>{
   let col       = document.createElement('td')
   col.className = cssClass
+  col.setAttribute(attribut,value)
   return col
 }
 
@@ -217,6 +221,16 @@ const generateSelect = ( name, id, options, defaultValue = null, cssClass = '' )
 	return select
 }
 
+const deleteProduct = (productId, productColor) =>{
+  for (let productIndex in bearCart){
+    let product = bearCart[productIndex]
+    if (product.id === productId && product.color === productColor){
+      bearCart.splice(productIndex, 1)
+    }
+  }
+  localStorage.setItem ('bearStore', JSON.stringify(bearCart))
+}
+
 
 let runIndex   = async () =>{
   let products = await callApi('/')
@@ -269,6 +283,21 @@ let updateProduct = (file, productId, productColor, newQty, tab, storage) =>{
   console.log (file)
 }
 
+let updateCartQty = (productId, productColor, newQty) =>{
+  let modified = false
+  for (let product of bearCart){
+    if (product.id === productId && product.color === productColor){
+      product.qty = product.qty + newQty
+      modified = true
+    }
+    localStorage.setItem ('bearStore', JSON.stringify(bearCart))
+    localStorage.getItem ('bearStore')
+  }
+  console.log (bearCart)
+}
+
+
+
 
 let runProduct = async () =>{
   //Recherche de l'url
@@ -314,26 +343,26 @@ let runProduct = async () =>{
     let alreadyExist = false
     let total = 0
 
-    updateProduct(resume, bArticle.id, bArticle.color, bArticle.quantity, bArticle, resumeArticle)
-//   for (let bear of resume){
-//     if (bear.id === bArticle.id && bear.color === bArticle.color){
-//       bear.quantity = Number(bear.quantity) + Number(bArticle.quantity)
-//       alreadyExist = true
-      
-//       break
-//     }
-//     total += Number(bear.quantity)
-//     totalArticle = total
-//     getId("cartQty").innerText = `(${totalArticle})` 
-//   }
-  
+    // updateProduct(resume, bArticle.id, bArticle.color, bArticle.quantity, bArticle, resumeArticle)
+    for (let bear of resume){
+      if (bear.id === bArticle.id && bear.color === bArticle.color){
+        bear.quantity = Number(bear.quantity) + Number(bArticle.quantity)
+        alreadyExist = true
+        
+        break
+      }
+      total += Number(bear.quantity)
+      totalArticle = total
+      getId("cartQty").innerText = `(${totalArticle})` 
+    }
+    
 
-//   if (!alreadyExist){
-//     resume.push(bArticle)
-//   }
+    if (!alreadyExist){
+      resume.push(bArticle)
+    }
 
-//   localStorage.setItem (resumeArticle, JSON.stringify(resume))
-//   localStorage.getItem('resumeArticle')
+    localStorage.setItem (resumeArticle, JSON.stringify(resume))
+    localStorage.getItem('resumeArticle')
 
   });
 
@@ -431,13 +460,111 @@ let runCart = async () =>{
       colColor.appendChild(cartColor)
 
       //Quantité
+      let bearOptionsQty = {
+        1 : '1',
+        2 : '2',
+        3 : '3',
+        4 : '4',
+        5 : '5',
+        6 : '6',
+        7 : '7',
+        8 : '8',
+        9 : '9',
+        10: '10'
+      }
       let colQty = bearTabCol('w-25 h-25')
       cartLine.appendChild(colQty)
-      let listQty = generateSelect('quantity', '', bearOptions, bear.qty)
-      listQty.addEventListener('change', () =>{
+      let listQty = generateSelect('quantity', '', bearOptionsQty, bear.quantity)
+      listQty.addEventListener('change', (e) =>{
+        updateCartQty (bear.id, bear.color, listQty.value)
+        
+        // let modified = false
+        // for (let product of bearCart){
+        //   if(product.id === bear.id && product.color === bear.color){
+        //     bear.quantity = listQty.value
+        //     modified = true
+        //   }
+        // }
+
+        localStorage.setItem (bear.quantity, JSON.stringify('bearStore'))
+        localStorage.getItem('bearStore')
+
+        console.log(e)
 
       })
+      colQty.appendChild(listQty)
 
+      //Prix panier
+      let colPrice = bearTabCol('w-25 h-25')
+      cartLine.appendChild(colPrice)
+      let cartPrice = bearTitle(5, 'text-center text-lg-right font-weight-bold', `${bPrice}€`)
+      colPrice.appendChild(cartPrice)
+
+      //Total ligne
+      let colTotalLine = bearTabCol('w-25 h-25')
+      cartLine.appendChild(colTotalLine)
+      let cartTotalLine = bearTitle(4, 'text-center text-lg-right text-danger font-weight-bold', `${bPrice * bear.quantity}€`)
+      colTotalLine.appendChild(cartTotalLine)
+
+      //Delete line
+      let colDelete = bearTabCol()
+      cartLine.appendChild(colDelete)
+      let deleteLink = document.createElement('button')
+      colDelete.appendChild(deleteLink)
+      let cartDelete = document.createElement('i')
+      cartDelete.className = "fas fa-trash-alt"
+      deleteLink.appendChild (cartDelete)
+
+      //Evennement suppression
+      cartDelete.addEventListener('click', (e) =>{
+          cartLine.remove()
+          deleteProduct(bear.id, bear.color)
+          
+      })
+
+      bearTotalPrice = bearTotalPrice + bPrice * bear.quantity
+
+      //Total Price
+      let totalAll = getId('totalPrice')
+      totalAll.innerText = ''
+
+      let priceLine = bearTabRow()
+      totalAll.appendChild (priceLine)
+
+      let colTotalAll = bearTabCol('','colspan',6)
+      // colTotalAll.setAttribute("colspan","5")
+      priceLine.appendChild (colTotalAll)
+      let cartTotalAll = bearTitle(3, 'text-lg-right font-weight-bold', "Total")
+      colTotalAll.appendChild(cartTotalAll)
+
+      let colPriceAll = bearTabCol('', 'colspan', 2)
+      // colTotalAll.setAttribute("colspan","2")
+      priceLine.appendChild (colPriceAll)
+      let cartPriceAll = bearTitle(2, 'text-center, text-lg-right font-weight-bold text-danger', `${bearTotalPrice} €`)
+      colPriceAll.appendChild (cartPriceAll)
+
+      getId("bearConfirme").addEventListener('click', (e) =>{
+        e.preventDefault();
+        console.log(e)
+
+        //retirer bouton confirmer
+        getId("bearConfirme").classList.add("d-none")
+        getId("formulaire").classList.remove("d-none")
+      })
+
+
+
+      // let order = getId("validOrder")
+      // order.addEventListener('click', (e) =>{
+      //   e.preventDefault();
+      //   fetch("https://mockbin.com/request", {
+      //     method: "POST",
+      //     headers: {
+      //     'Accept': 'application/json', 
+      //     'Content-Type': 'application/json'
+      //     },
+      //   }
+      // })
 
 
 
